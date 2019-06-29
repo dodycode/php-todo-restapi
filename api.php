@@ -14,10 +14,6 @@ switch($_SERVER['REQUEST_METHOD']){
         if(isset($_GET['id']) && !isset($_GET['complete'])){
             getOneTodo($conn, $_GET['id']);
         }
-        //ex: ?id=id&complete=trueorfalse - set complete specific todo
-        elseif(isset($_GET['id']) && isset($_GET['complete'])){
-            completeTodo($conn, $_GET['id'], $_GET['complete']);
-        }
         //noparam - get all todos
         else{
             getTodos($conn);
@@ -25,8 +21,10 @@ switch($_SERVER['REQUEST_METHOD']){
         break;
     case 'POST':
         //ex: ?id=id - update todo
-        if($_GET['id'] !== null && $_POST['todo'] !== null){
-            updateTodo($conn, $_GET['id'], $_POST['todo']);
+        if($_GET['id'] !== null 
+            && $_POST['todo'] !== null 
+            && $_POST['complete'] !== null){
+            updateTodo($conn, $_GET['id'], $_POST['todo'], $_POST['complete']);
         }
         //noparam - add new todo
         else{
@@ -85,25 +83,19 @@ function addTodo($conn, $todo){
     }
 }
 
-function updateTodo($conn, $id, $todo){
-    $sql = "UPDATE todos SET todo='$todo' WHERE id='$id'";
-    $result = $conn->query($sql);
-    if($result) {
-        echo json_encode(["success" => "berhasil mengedit todo!"]);
-    }else{
-        echo json_encode(["error" => mysqli_error($conn)]);
-    }
-}
-
-function completeTodo($conn, $id, $complete){
-    //convert to string to prevent bugs xD. https://stackoverflow.com/a/1956618
-    if ($complete == "false") { 
-        $complete = "0"; 
-    }else{
-        $complete = "1";
+function updateTodo($conn, $id, $todo, $complete){
+    //converted to string to prevent bugs xD. https://stackoverflow.com/a/1956618
+    switch ($complete) {
+        case "true":
+            $complete = "1"; 
+            break;
+        
+        default:
+            $complete = "0";
+            break;
     }
 
-    $sql = "UPDATE todos SET completed=$complete WHERE id='$id'";
+    $sql = "UPDATE todos SET todo='$todo', completed=$complete WHERE id='$id'";
     $result = $conn->query($sql);
     if($result) {
         getOneTodo($conn, $id);
