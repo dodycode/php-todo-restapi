@@ -3,7 +3,7 @@
 require 'db.php';
 
 //CORS Allow Sets (To allow access in localhost)
-header("Content-Type:application/json");
+header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
 
@@ -67,7 +67,7 @@ function getOneTodo($conn, $id) {
             $data[] = $row;
         }
 
-        echo json_encode($data);
+        echo json_encode($data, JSON_PRETTY_PRINT);
     }else{
         echo json_encode(["error" => mysqli_error($conn)]);
     }

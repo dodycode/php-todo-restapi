@@ -62,10 +62,13 @@
                     <span class="mr-20"><?php echo substr($row->todo, 0, 20); ?> | <?php echo $row->completed === '1' ? 'Completed' : 'Not Completed' ?></span>
                     <div style="top: 15px;right: 10px;" class="absolute">
                         <span onclick="updateTodo(<?php echo $row->id; ?>)">
-                            <img class="w-4 mr-2 inline-block cursor-pointer" src="assets/img/lnr-pencil.svg" alt="Edit">
+                            <img class="w-4 inline-block cursor-pointer" src="assets/img/lnr-pencil.svg" alt="Edit">
+                        </span>
+                        <span onclick="showTodo(<?php echo $row->id; ?>)">
+                            <img class="w-5 inline-block cursor-pointer" src="assets/img/lnr-eye.svg" alt="View">
                         </span>
                         <span onclick="deleteTodo(<?php echo $row->id; ?>)">
-                            <img class="w-5 inline-block cursor-pointer" src="assets/img/lnr-cross.svg" alt="Edit">
+                            <img class="w-5 inline-block cursor-pointer" src="assets/img/lnr-cross.svg" alt="Delete">
                         </span>
                     </div>
                 </div>
@@ -90,13 +93,47 @@
                 return fetch('api.php', {
                     method: 'POST',
                     body: formData
-                }).then(function(response) {
-                    if (!response.error) {
+                })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (!data[0].error) {
                         window.location.href = '/';
                     }else{
                         Swal.fire(
                           'Whoops something were wrong!',
-                          response.error,
+                          data[0].error,
+                          'error'
+                        );
+                    }
+                });
+            }
+
+            const showTodo = async(id) => {
+                return fetch('api.php?id='+id, {method: 'GET'})
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data){
+                    console.log(data);
+                    if (!data[0].error) {
+                        if (data[0].completed === "1") {
+                            var status = "Completed";
+                        }else{
+                            var status = "Not Completed"
+                        }
+
+                        Swal.fire(
+                          'Show Todo',
+                          'Content: '+data[0].todo+"<br />"
+                          +'Status: '+status,
+                          'info'
+                        );
+                    }else{
+                        Swal.fire(
+                          'Whoops something were wrong!',
+                          data[0].error,
                           'error'
                         );
                     }
@@ -130,13 +167,17 @@
                     return fetch('api.php?id='+id, {
                         method: 'POST',
                         body: formData
-                    }).then(function(response) {
-                        if (!response.error) {
+                    })
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        if (!data[0].error) {
                             window.location.href = '/';
                         }else{
                             Swal.fire(
                               'Whoops something were wrong!',
-                              response.error,
+                              data[0].error,
                               'error'
                             );
                         }
@@ -157,12 +198,15 @@
                   if (result.value) {
                     return fetch('api.php?id='+id, {method: 'DELETE'})
                     .then(function(response) {
-                        if (!response.error) {
-                           window.location.href = '/';
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        if (!data[0].error) {
+                            window.location.href = '/';
                         }else{
                             Swal.fire(
                               'Whoops something were wrong!',
-                              response.error,
+                              data[0].error,
                               'error'
                             );
                         }
