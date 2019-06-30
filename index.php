@@ -1,7 +1,7 @@
 <?php 
     //CURL GET OPTIONS
     $options = [
-        CURLOPT_URL => 'modul9.test/api.php',
+        CURLOPT_URL => 'yourhost/api.php',
         CURLOPT_RETURNTRANSFER => true
     ];
 
