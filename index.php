@@ -98,15 +98,7 @@
                     return response.json();
                 })
                 .then(function(data) {
-                    if (!data[0].error) {
-                        window.location.href = '/';
-                    }else{
-                        Swal.fire(
-                          'Whoops something were wrong!',
-                          data[0].error,
-                          'error'
-                        );
-                    }
+                    window.location.href = '/';
                 });
             }
 
@@ -116,27 +108,18 @@
                     return response.json();
                 })
                 .then(function(data){
-                    console.log(data);
-                    if (!data[0].error) {
-                        if (data[0].completed === "1") {
-                            var status = "Completed";
-                        }else{
-                            var status = "Not Completed"
-                        }
-
-                        Swal.fire(
-                          'Show Todo',
-                          'Content: '+data[0].todo+"<br />"
-                          +'Status: '+status,
-                          'info'
-                        );
+                    if (data[0].completed === "1") {
+                        var status = "Completed";
                     }else{
-                        Swal.fire(
-                          'Whoops something were wrong!',
-                          data[0].error,
-                          'error'
-                        );
+                        var status = "Not Completed"
                     }
+
+                    Swal.fire(
+                      'Show Todo',
+                      'Content: '+data[0].todo+"<br />"
+                      +'Status: '+status,
+                      'info'
+                    );    
                 });
             }
 
@@ -172,15 +155,7 @@
                         return response.json();
                     })
                     .then(function(data) {
-                        if (!data[0].error) {
-                            window.location.href = '/';
-                        }else{
-                            Swal.fire(
-                              'Whoops something were wrong!',
-                              data[0].error,
-                              'error'
-                            );
-                        }
+                        window.location.href = '/';
                     });
                 }
             }
@@ -201,15 +176,7 @@
                         return response.json();
                     })
                     .then(function(data) {
-                        if (!data[0].error) {
-                            window.location.href = '/';
-                        }else{
-                            Swal.fire(
-                              'Whoops something were wrong!',
-                              data[0].error,
-                              'error'
-                            );
-                        }
+                        window.location.href = '/';
                     });
                   }
                 });
